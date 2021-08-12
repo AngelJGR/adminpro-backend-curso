@@ -60,9 +60,7 @@ const updateUser = async (req, res = response) => {
       });
     }
 
-    const fields = req.body;
-    delete fields.password;
-    delete fields.google;
+    const { password, google, ...fields } = req.body;
 
     if (userDB.email !== fields.email) {
       const emailExist = await User.findOne({ email: fields.email });
