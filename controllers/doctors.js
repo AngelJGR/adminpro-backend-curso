@@ -1,4 +1,5 @@
 const { response } = require('express');
+const Doctor = require('../models/doctor');
 
 const getDoctors = (req, res = response) => {
   res.json({
@@ -7,11 +8,24 @@ const getDoctors = (req, res = response) => {
   })
 }
 
-const createDoctor = (req, res = response) => {
-  res.json({
-    ok: true,
-    msg: 'Create Doctor'
-  })
+const createDoctor = async (req, res = response) => {
+  const doctor = new Doctor({
+    user: req.uid,
+    ...req.body
+  });
+
+  try {
+    const doctorDB = await doctor.save();
+    res.json({
+      ok: true,
+      doctor: doctorDB
+    })
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      msg: 'Error inesperado... revisar logs'
+    })
+  }
 }
 
 const updateDoctor = (req, res = response) => {
