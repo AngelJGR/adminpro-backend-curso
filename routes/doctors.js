@@ -13,6 +13,7 @@ router.post('/',
     validateJwt,
     check('name', 'Doctor name is required').notEmpty(),
     check('hospital', 'Hospital is required').notEmpty(),
+    check('hospital', 'Hospital id must be valid').isMongoId(),
     validate
   ],
   createDoctor
