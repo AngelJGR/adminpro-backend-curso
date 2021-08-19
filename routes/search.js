@@ -1,7 +1,5 @@
 const { Router } = require("express");
-// const { check } = require('express-validator');
 
-// const { validate } = require('../middlewares/validators');
 const { findAll, findByCollection } = require('../controllers/search');
 const { validateJwt } = require("../middlewares/validate-jwt");
 
