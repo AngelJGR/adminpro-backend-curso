@@ -1,5 +1,6 @@
 const { response } = require('express');
 const { v4: uuidv4 } = require('uuid');
+const { updateImage } = require('../helpers/update-image');
 
 const fileUpload = (req, res = response) => {
 
@@ -44,6 +45,9 @@ const fileUpload = (req, res = response) => {
         msg: 'An error was occurred when file uploads'
       });      
     }
+
+    updateImage(collection, id, filename);
+
     res.json({
       ok: true,
       msg: 'File upload successfuly',
