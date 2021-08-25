@@ -17,6 +17,9 @@ app.use(cors());
 // Configurar body
 app.use(express.json());
 
+//Public
+app.use(express.static('public'))
+
 // Routes
 app.use('/api/users', require('./routes/users'));
 app.use('/api/login', require('./routes/auth'));
