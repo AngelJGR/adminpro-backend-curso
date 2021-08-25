@@ -50,10 +50,27 @@ const googleSignIn = async (req, res = response) => {
 
     const { name, email, picture } = await googleVerify(googleToken);
 
+    const userDB = await User.findOne({ email });
+    let user;
+    if (!userDB) {
+      user = new User({
+        name, email,
+        img: picture,
+        password: '###',
+        google: true
+
+      });
+    } else {
+      user = userDB;
+      user.google = true;
+    }
+
+    await user.save();
+    const token = await generateJWT( user.id );
+
     res.json({
       ok: true,
-      msg: 'Google sign in',
-      name, email, picture
+      token
     });
   } catch (error) {
     res.status(401).json({
