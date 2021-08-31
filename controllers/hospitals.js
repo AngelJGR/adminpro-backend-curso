@@ -50,7 +50,7 @@ const updateHospital = async (req, res = response) => {
 
     const hospitalNewData = {
       ...req.body,
-      usuario: uid
+      user: uid
     }
 
     const hospitalUpdated = await Hospital.findByIdAndUpdate(id, hospitalNewData, { new: true });
