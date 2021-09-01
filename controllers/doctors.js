@@ -19,6 +19,15 @@ const createDoctor = async (req, res = response) => {
   });
 
   try {
+    const hospitalDB = await Hospital.findById(req.body.hospital);
+
+    if (!hospitalDB) {
+      return res.status(404).json({
+        ok: false,
+        msg: 'Hospital not found'
+      });
+    }
+
     const doctorDB = await doctor.save();
     res.json({
       ok: true,
@@ -76,11 +85,32 @@ const updateDoctor = async (req, res = response) => {
   }
 }
 
-const deleteDoctor = (req, res = response) => {
-  res.json({
-    ok: true,
-    msg: 'Delete Doctor'
-  })
+const deleteDoctor = async (req, res = response) => {
+  
+  const { id } = req.params;
+  try {
+    const doctorDB = await Doctor.findById(id);
+    if (!doctorDB) {
+      return res.status(404).json({
+        ok: false,
+        msg: 'Doctor not found'
+      });
+    }
+
+    await Doctor.findByIdAndDelete( id );
+
+    res.json({
+      ok: true,
+      msg: 'Doctor deleted!'
+    });
+    
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      ok: false,
+      msg: 'Error inesperado... revisar logs'
+    });
+  }
 }
 
 module.exports = {
