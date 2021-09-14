@@ -84,12 +84,29 @@ const renewToken = async (req, res = response) => {
 
   const uid = req.uid;
 
-  const token = await generateJWT( uid );
+  try {
+    const user = await User.findById(uid);
+    if (!user) {
+      return res.status(404).json({
+        ok: false,
+        msg: 'User not found'
+      });
+    }
+    const token = await generateJWT( uid );
 
-  res.json({
-    ok: true,
-    token
-  });
+    res.json({
+      ok: true,
+      token,
+      user
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      ok: false,
+      msg: 'Error del servidor'
+    });
+  }
+  
 };
 
 module.exports = {
