@@ -71,16 +71,25 @@ const updateUser = async (req, res = response) => {
       });
     }
 
-    const { password, google, ...fields } = req.body;
+    const { password, google, email, ...fields } = req.body;
 
-    if (userDB.email !== fields.email) {
-      const emailExist = await User.findOne({ email: fields.email });
+    if (userDB.email !== email) {
+      const emailExist = await User.findOne({ email });
       if (emailExist) {
         return res.status(400).json({
           ok: false,
           msg: 'Email exists'
         });
       }
+    }
+
+    if (!userDB.google) {
+      fields.email = email;
+    } else if (userDB.email !== email) {
+      res.status(400).json({
+        ok: false,
+        msg: 'Google users can\'n change their emails'
+      });
     }
 
     const updatedUser = await User.findByIdAndUpdate( uid, fields, { new: true } );
