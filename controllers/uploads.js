@@ -39,7 +39,7 @@ const fileUpload = (req, res = response) => {
   const filename = `${ uuidv4() }.${ext}`;
   const path = `./uploads/${collection}/${filename}`;
 
-  file.mv(path, (err) => {
+  file.mv(path, async (err) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
@@ -48,7 +48,7 @@ const fileUpload = (req, res = response) => {
       });      
     }
 
-    updateImage(collection, id, filename);
+    await updateImage(collection, id, filename);
 
     res.json({
       ok: true,
