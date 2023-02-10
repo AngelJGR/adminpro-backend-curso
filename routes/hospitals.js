@@ -7,7 +7,7 @@ const { validate } = require('../middlewares/validators')
 
 const router = Router();
 
-router.get('/', getHospitals);
+router.get('/', validateJwt, getHospitals);
 router.post('/',
   [
     validateJwt,
