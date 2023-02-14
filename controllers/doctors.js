@@ -12,6 +12,24 @@ const getDoctors = async (req, res = response) => {
   })
 }
 
+const getDoctorById = async (req, res = response) => {
+
+  try {
+    const doctor = await Doctor.findById(req.params.id).populate('user', 'name email').populate('hospital', 'name');
+    res.json({
+      ok: true,
+      doctor
+    })
+  } catch (error) {
+    console.log(error)
+    res.json({
+      ok: false,
+      msg: 'Error getting doctor'
+    })
+  }
+  
+}
+
 const createDoctor = async (req, res = response) => {
   const doctor = new Doctor({
     user: req.uid,
@@ -115,7 +133,8 @@ const deleteDoctor = async (req, res = response) => {
 
 module.exports = {
   getDoctors,
+  getDoctorById,
   createDoctor,
   updateDoctor,
-  deleteDoctor
+  deleteDoctor,
 }
