@@ -4,6 +4,7 @@ const User = require('../models/user');
 
 const { generateJWT } = require('../helpers/jwt');
 const { googleVerify } = require('../helpers/google-verify');
+const { getMenuFrontend } = require('../helpers/menu-frontend');
 
 const login = async (req, res = response) => {
   const { email, password } = req.body;
@@ -30,6 +31,7 @@ const login = async (req, res = response) => {
     res.json({
       ok: true,
       token,
+      menu: getMenuFrontend( userDB.role ),
       msg: 'Login successfully'
     })
 
@@ -45,11 +47,8 @@ const login = async (req, res = response) => {
 const googleSignIn = async (req, res = response) => {
 
   const googleToken = req.body.token;
-
   try {
-
     const { name, email, picture } = await googleVerify(googleToken);
-
     const userDB = await User.findOne({ email });
     let user;
     if (!userDB) {
@@ -70,7 +69,8 @@ const googleSignIn = async (req, res = response) => {
 
     res.json({
       ok: true,
-      token
+      token,
+      menu: getMenuFrontend(user.role)
     });
   } catch (error) {
     res.status(401).json({
@@ -97,6 +97,7 @@ const renewToken = async (req, res = response) => {
     res.json({
       ok: true,
       token,
+      menu: getMenuFrontend(user.role),
       user
     });
   } catch (error) {
