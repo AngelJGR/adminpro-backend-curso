@@ -51,7 +51,34 @@ const validateAdminRole = async (req, res, next) => {
   }
 }
 
+const validateAdminRoleOrSameUser = async (req, res, next) => {
+  const uid = req.uid
+  const id = req.params.id
+  try {
+    const userDB = await User.findById(uid)
+    if (!userDB)
+      return res.status(400).json({
+        ok: false,
+        msg: 'User doesn\'t exist'
+      })
+    
+    if ( id !== uid && userDB.role !== 'ADMIN_ROLE')
+      return res.status(403).json({
+        ok: false,
+        msg: 'Unauthorizer user'
+      })
+    next()
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      ok: false,
+      msg: 'User is not admin'
+    })
+  }
+}
+
 module.exports = {
   validateJwt,
-  validateAdminRole
+  validateAdminRole,
+  validateAdminRoleOrSameUser
 }
